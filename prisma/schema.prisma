@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model data {
+  id        String   @id
+  firstName String
+  lastName  String
+  position  Position @default(SALES)
+  phone     String
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+enum Position {
+  CEO
+  CTO
+  CONTROLLER
+  CFO
+  SALES
+  MARKETING
+  HR
+  IT
+}
