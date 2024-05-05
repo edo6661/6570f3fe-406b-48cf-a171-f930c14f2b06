@@ -35,7 +35,7 @@ export default function ModalContext({
 
   const [initialData, setInitialData] = useState<data | undefined>(undefined)
 
-  const getIdThatTrue = Object.entries(selectedIds).filter(([key, value]) => value === true).map(([key, value]) => key).toString()
+  const getIdThatTrue = Object.entries(selectedIds).filter(([_key, value]) => value === true).map(([key, _value]) => key).toString()
 
   const getDataById = async () => {
     try {

@@ -12,11 +12,14 @@ import InputField from "@/components/shared/InputField"
 import validator from 'validator'
 import { defaultFields } from "@/constants/defaultFields"
 import { toast } from "sonner"
-import { data } from "@prisma/client"
-import { useModalContext } from "@/hooks/useModalContext"
-import axios from "axios"
+import { useTransition } from "react"
+import { createData, editData } from "@/actions/data"
 import { errHandler } from "@/utils/errHandler"
-import { useEffect, useState } from "react"
+import { defaultPositions } from "@/constants/defaultPosition"
+import TemplateSelect from "./TemplateSelect"
+import { useModalContext } from "@/hooks/useModalContext"
+import { Position } from "@prisma/client"
+import { useDataById } from "@/hooks/useDataById"
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -28,19 +31,27 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email.",
   }),
+  position: z.nativeEnum(Position, {
+    errorMap: () => ({
+      message: "Please select a position.",
+    })
+  }),
   phone: z.string().min(8, {
     message: "Phone number must be at least 8 characters.",
   }).refine(validator.isMobilePhone, "Invalid phone number")
 })
 
+export type FormSchema = z.infer<typeof formSchema>
 
 export default function FormData(
 ) {
+  const [isPending, startTransition] = useTransition()
 
-  const { initialData } = useModalContext()
+  const { initialData, actions, onClose } = useModalContext()
+  const { add, edit } = actions
 
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...(initialData ? {
@@ -50,27 +61,56 @@ export default function FormData(
         lastName: "",
         email: "",
         phone: "",
+        position: (Position.CEO as Position),
       })
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success(JSON.stringify(values))
+  async function onSubmit(values: FormSchema) {
+    startTransition(async () => {
+      try {
+        if (add) {
+          createData(values)
+          toast.success("Data added successfully")
+        }
+        if (edit) {
+          editData(values, initialData?.id!)
+          toast.success("Data edited successfully")
+        }
+        onClose()
+      } catch (err) {
+        errHandler(err, "Failed to add data")
+        toast.error("Failed to add data")
+      }
+    })
   }
-
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {defaultFields.map(({ value, label }) =>
-          <InputField
-            key={value}
-            control={form.control}
-            name={value}
-            placeholder={`Enter ${label}`}
-          />
+          <div key={value}>
+            {value === "position" ? (
+              <TemplateSelect
+                control={form.control}
+                placeholder="Select a position"
+                name={value}
+                optionsData={defaultPositions}
+              />
+            ) : (
+              <InputField
+                key={value}
+                control={form.control}
+                name={value}
+                placeholder={`Enter ${label}`}
+              />
+            )}
+          </div>
         )}
-        <Button type="submit">Submit</Button>
+        <Button type="submit"
+          disabled={isPending}
+          className="disabled:cursor-not-allowed disabled:opacity-80"
+        >Submit</Button>
       </form>
     </Form>
   )

@@ -10,11 +10,6 @@ import { useModalContext } from "@/hooks/useModalContext"
 import FormData from "@/app/_components/FormData"
 import DeleteAction from "@/app/_components/DeleteAction"
 import { getForm } from "@/utils/form"
-import { data } from "@prisma/client"
-import { errHandler } from "@/utils/errHandler"
-import axios from 'axios'
-import { Button } from "../ui/button"
-import { useState } from "react"
 
 export function Modal(
 ) {

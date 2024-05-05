@@ -6,6 +6,7 @@ import Actions from './Actions'
 import TableData from './TableData'
 import SelectForm from '@/components/shared/SelectForm'
 import { defaultFields } from '@/constants/defaultFields'
+import { motion } from 'framer-motion'
 interface WrapperDataProps {
   data: data[]
 }
@@ -14,9 +15,10 @@ const WrapperData = (
 ) => {
   const [field, setField] = useState<string>("")
   return (
-    <div className='py-12 space-y-8'>
-      <div className="flex items-center justify-between gap-8">
-        <div className='flex items-center gap-4'>
+    <motion.div className='py-12 space-y-8'
+      layout>
+      <motion.div layout className="flex items-center justify-between gap-8">
+        <motion.div layout className='flex items-center gap-4'>
           <SearchBox />
           <SelectForm
             setData={setField}
@@ -24,14 +26,14 @@ const WrapperData = (
             placeholder="Select a field to search"
             optionsData={defaultFields}
           />
-        </div>
+        </motion.div>
         <Actions
         />
-      </div>
+      </motion.div>
       <TableData
         data={data}
       />
-    </div>
+    </motion.div>
   )
 }
 

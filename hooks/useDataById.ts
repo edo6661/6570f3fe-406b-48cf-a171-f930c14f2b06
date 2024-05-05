@@ -7,10 +7,10 @@ import { useModalContext } from "./useModalContext";
 export const useDataById = () => {
   const { setInitialData, selectedIds } = useModalContext();
   const selectedIdThatTrue = Object.entries(selectedIds)
-    .filter(([key, value]) => value === true)
+    .filter(([_key, value]) => value === true)
     .map(([key]) => key)
     .toString();
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["data", selectedIdThatTrue],
     queryFn: async () => {
       try {
@@ -24,5 +24,5 @@ export const useDataById = () => {
     },
     enabled: !!selectedIdThatTrue,
   });
-  return { data, isLoading, isError, error };
+  return { data, isLoading, isError, error, refetch };
 };

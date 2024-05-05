@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { data } from "@prisma/client"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useModalContext } from "@/hooks/useModalContext"
 import { motion } from 'framer-motion'
 import { useDataById } from "@/hooks/useDataById"
@@ -25,6 +25,11 @@ const TableData = (
 ) => {
   const { setSelectedIds, selectedIds } = useModalContext()
   const { data: _dataById } = useDataById()
+  const allChecked = useMemo(() => {
+    if (data.length === 0) return false
+    return Object.values(selectedIds).every((v) => v)
+  }, [data.length, selectedIds])
+
   useEffect(() => {
     if (data.length > 0) {
       setSelectedIds(data.reduce((acc, dt) => ({ ...acc, [dt.id]: false }), {}))
@@ -33,14 +38,16 @@ const TableData = (
 
   const onChecked = (id: string) => setSelectedIds((prev) => ({ ...prev, [id]: !prev[id] }))
 
-  const allChecked = Object.values(selectedIds).every((val) => val)
   const onCheckedAll = () => setSelectedIds(Object.keys(selectedIds).reduce((acc, id) => ({ ...acc, [id]: !allChecked }), {}))
+
 
   return (
 
     <motion.div layout>
       <Table>
-        <TableCaption>A list of your recent Data.</TableCaption>
+        <TableCaption>
+          {data.length > 0 ? "A list of your recent Data." : "No data available."}
+        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>

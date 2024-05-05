@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { EnumActions } from "@/constants/defaultActions";
 import { useModalContext } from "@/hooks/useModalContext";
 import { Edit, Plus, Trash, } from "lucide-react"
+import { useMemo } from "react";
 import { toast } from "sonner";
 const Actions = (
 ) => {
@@ -13,7 +14,7 @@ const Actions = (
     setIsActions((prev) => ({ ...prev, [action]: !prev[action] }))
   }
 
-  const oneTrueKey = Object.values(selectedIds).filter((val) => val === true)
+  const oneTrueKey = useMemo(() => Object.values(selectedIds).filter((val) => val === true), [selectedIds])
 
   return (
     <div className="flex items-center gap-4">
