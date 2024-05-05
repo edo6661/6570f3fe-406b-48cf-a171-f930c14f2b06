@@ -7,13 +7,26 @@ import { revalidatePath } from "next/cache";
 
 export const createData = async (data: FormSchema) => {
   try {
+    const dataExist = await db.data.findFirst({
+      where: {
+        email: data.email,
+      },
+    });
+    if (dataExist) {
+      return {
+        error: "Email already exist",
+      };
+    }
     const res = await db.data.create({
       data: {
         ...data,
       },
     });
     revalidatePath("/");
-    return res;
+    return {
+      message: "Data created",
+      data: res,
+    };
   } catch (err) {
     errHandler(err, "Failed to create data");
   }
@@ -21,6 +34,16 @@ export const createData = async (data: FormSchema) => {
 
 export const editData = async (data: FormSchema, id: string) => {
   try {
+    const dataExist = await db.data.findFirst({
+      where: {
+        email: data.email,
+      },
+    });
+    if (dataExist && dataExist.id !== id) {
+      return {
+        error: "Email already exist",
+      };
+    }
     const res = await db.data.update({
       where: {
         id,
@@ -30,7 +53,10 @@ export const editData = async (data: FormSchema, id: string) => {
       },
     });
     revalidatePath("/");
-    return res;
+    return {
+      message: "Data edited",
+      data: res,
+    };
   } catch (err) {
     errHandler(err, "Failed to edit data");
   }

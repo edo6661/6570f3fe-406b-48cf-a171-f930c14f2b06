@@ -56,7 +56,7 @@ export default function ModalContext({
       onClose,
       actions, setIsActions,
       selectedIds, setSelectedIds
-      , initialData, getDataById, setInitialData
+      , initialData, getDataById, setInitialData,
 
     }}
   >{children}</modalContext.Provider>

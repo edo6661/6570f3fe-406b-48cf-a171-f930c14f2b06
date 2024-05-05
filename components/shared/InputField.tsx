@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input';
+import { AnimatePresence, motion } from 'framer-motion';
 interface InputFieldProps {
   control: any;
   name: string;
@@ -18,7 +19,10 @@ const InputField = (
           <FormControl>
             <Input placeholder={placeholder} {...field} />
           </FormControl>
-          <FormMessage />
+          <AnimatePresence>
+            <FormMessage />
+
+          </AnimatePresence>
         </FormItem>
       )}
     />

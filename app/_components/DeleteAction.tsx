@@ -19,6 +19,7 @@ const DeleteAction = () => {
         } else {
           await deleteData(id)
         }
+        toast.success("Data deleted.")
         onClose()
       } catch (err) {
         errHandler(err, "Failed to delete data.")

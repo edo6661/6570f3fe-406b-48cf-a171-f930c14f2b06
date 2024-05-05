@@ -12,7 +12,7 @@ import InputField from "@/components/shared/InputField"
 import validator from 'validator'
 import { defaultFields } from "@/constants/defaultFields"
 import { toast } from "sonner"
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import { createData, editData } from "@/actions/data"
 import { errHandler } from "@/utils/errHandler"
 import { defaultPositions } from "@/constants/defaultPosition"
@@ -20,6 +20,7 @@ import TemplateSelect from "./TemplateSelect"
 import { useModalContext } from "@/hooks/useModalContext"
 import { Position } from "@prisma/client"
 import { useDataById } from "@/hooks/useDataById"
+import { motion } from "framer-motion"
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -54,7 +55,7 @@ export default function FormData(
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...(initialData ? {
+      ...(initialData && edit ? {
         ...initialData,
       } : {
         firstName: "",
@@ -67,18 +68,26 @@ export default function FormData(
   })
 
   async function onSubmit(values: FormSchema) {
+
     startTransition(async () => {
+      let res = null
       try {
         if (add) {
-          createData(values)
-          toast.success("Data added successfully")
+          res = await createData(values)
+        } else if (edit) {
+          res = await editData(values, initialData!.id)
         }
-        if (edit) {
-          editData(values, initialData?.id!)
-          toast.success("Data edited successfully")
+        if (res?.error) {
+          form.setError("email", {
+            message: res.error,
+          })
+          toast.error(res.error)
+          return
         }
         onClose()
-      } catch (err) {
+        toast.success(res?.message)
+      }
+      catch (err) {
         errHandler(err, "Failed to add data")
         toast.error("Failed to add data")
       }
@@ -87,7 +96,9 @@ export default function FormData(
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <motion.form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4"
+        layout
+      >
         {defaultFields.map(({ value, label }) =>
           <div key={value}>
             {value === "position" ? (
@@ -111,7 +122,7 @@ export default function FormData(
           disabled={isPending}
           className="disabled:cursor-not-allowed disabled:opacity-80"
         >Submit</Button>
-      </form>
+      </motion.form>
     </Form>
   )
 }

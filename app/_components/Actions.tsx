@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 const Actions = (
 ) => {
-  const { setIsOpen, setIsActions, selectedIds } = useModalContext()
+  const { setIsOpen, setIsActions, selectedIds, actions } = useModalContext()
   const onAction = (action: EnumActions) => {
     setIsOpen((prev) => !prev)
     setIsActions((prev) => ({ ...prev, [action]: !prev[action] }))

@@ -14,21 +14,76 @@ import {
 import { data } from "@prisma/client"
 import { useEffect, useMemo, useState } from "react"
 import { useModalContext } from "@/hooks/useModalContext"
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useDataById } from "@/hooks/useDataById"
 import { defaultFields } from "@/constants/defaultFields"
+import { ArrowUp } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { betterQuery } from "@/utils/betterQuery"
+import TableHeadData from "./TableHeadData"
+import TableRowData from "./TableRowData"
+import PaginationData from "./PaginationData"
+import { PER_PAGE } from "@/constants/pagination"
 interface TableDataProps {
   data: data[]
 }
 const TableData = (
   { data }: TableDataProps
 ) => {
+
+  const [currentSort, setCurrentSort] = useState<keyof data>("firstName")
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
+  const searchParams = useSearchParams()
+  const q = searchParams.get("q")
+
+  const filteredAndSortedData = useMemo(() => {
+    const sortedData = [...data];
+
+    if (q) {
+      return sortedData.filter((data) => betterQuery(data.firstName).includes(betterQuery(q)
+      ) || betterQuery(data.lastName).includes(betterQuery(q)
+      ) || betterQuery(data.email).includes(betterQuery(q)
+      ) || betterQuery(data.position).includes(betterQuery(q)
+      ) || betterQuery(data.phone).includes(betterQuery(q)
+      )
+      )
+    }
+    sortedData.sort((a, b) => {
+      const aValue = (a[currentSort]) as string;
+      const bValue = (b[currentSort]) as string;
+
+      return aValue.localeCompare(bValue, undefined, { sensitivity: "case" });
+    });
+
+    if (sortDirection === "desc") {
+      sortedData.reverse();
+    }
+
+    return sortedData;
+  }, [data, currentSort, sortDirection, q]);
+
   const { setSelectedIds, selectedIds } = useModalContext()
+
   const { data: _dataById } = useDataById()
+
   const allChecked = useMemo(() => {
     if (data.length === 0) return false
     return Object.values(selectedIds).every((v) => v)
   }, [data.length, selectedIds])
+
+
+  const onChecked = (id: string) => setSelectedIds((prev) => ({ ...prev, [id]: !prev[id] }))
+
+  const onCheckedAll = () => setSelectedIds(Object.keys(selectedIds).reduce((acc, id) => ({ ...acc, [id]: !allChecked }), {}))
+
+  const onSort = (field: keyof data) => {
+    if (currentSort === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setCurrentSort(field);
+      setSortDirection("asc");
+    }
+  }
 
   useEffect(() => {
     if (data.length > 0) {
@@ -36,18 +91,18 @@ const TableData = (
     }
   }, [data, setSelectedIds])
 
-  const onChecked = (id: string) => setSelectedIds((prev) => ({ ...prev, [id]: !prev[id] }))
+  const totalPages = Math.ceil(filteredAndSortedData.length / PER_PAGE)
+  const curentPage = +searchParams.get("page")! || 1
+  const skip = (curentPage - 1) * PER_PAGE
+  const currentData = filteredAndSortedData.slice(skip, skip + PER_PAGE)
 
-  const onCheckedAll = () => setSelectedIds(Object.keys(selectedIds).reduce((acc, id) => ({ ...acc, [id]: !allChecked }), {}))
 
 
   return (
 
-    <motion.div layout>
+    <motion.div layout className="space-y-8">
       <Table>
-        <TableCaption>
-          {data.length > 0 ? "A list of your recent Data." : "No data available."}
-        </TableCaption>
+
         <TableHeader>
           <TableRow>
             <TableHead>
@@ -61,31 +116,35 @@ const TableData = (
               />
             </TableHead>
             {defaultFields.map((field) =>
-              <TableHead key={field.value}>{field.label}</TableHead>
+              <TableHeadData
+                q={q}
+                field={field}
+                currentSort={currentSort}
+                sortDirection={sortDirection}
+                onSort={onSort}
+                key={field.value}
+              />
             )}
           </TableRow>
         </TableHeader>
         <TableBody>
 
-          {data?.map((dt) => (
-            <TableRow key={dt.id}>
-              <TableCell ><Checkbox
-                checked={selectedIds[dt.id]}
-                onCheckedChange={() => onChecked(dt.id)}
-              /></TableCell>
-              <TableCell>{dt.firstName}</TableCell>
-              <TableCell>{dt.lastName}</TableCell>
-              <TableCell>
-                {dt.position}
-              </TableCell>
-              <TableCell>{dt.phone}</TableCell>
-              <TableCell>{dt.email}</TableCell>
-            </TableRow>
-          ))}
+          {
+            currentData
+              ?.map((dt) => (
+                <TableRowData
+                  key={dt.id}
+                  {...dt}
+                  selectedIds={selectedIds}
+                  onChecked={onChecked}
+                />
+              ))}
         </TableBody>
-        <TableFooter>
-        </TableFooter>
+
       </Table>
+      <PaginationData
+        totalPages={totalPages}
+      />
     </motion.div>
   )
 }

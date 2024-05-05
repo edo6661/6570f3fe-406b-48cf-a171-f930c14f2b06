@@ -20,3 +20,5 @@ export const defaultFields = [
     value: "phone",
   },
 ];
+
+export type DefaultFields = typeof defaultFields;
