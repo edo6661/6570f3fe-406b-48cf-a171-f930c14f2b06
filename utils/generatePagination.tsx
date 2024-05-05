@@ -1,23 +1,25 @@
+
 export const generatePagination = (currentPage: number, totalPages: number) => {
-  if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  let startPage = 1;
+  let endPage = totalPages;
+  let pages: number[] = [];
+
+  if (totalPages > 5) {
+    if (currentPage <= 3) {
+      startPage = 1;
+      endPage = 5;
+    } else if (currentPage + 2 >= totalPages) {
+      startPage = totalPages - 4;
+      endPage = totalPages;
+    } else {
+      startPage = currentPage - 2;
+      endPage = currentPage + 2;
+    }
   }
 
-  if (currentPage <= 3) {
-    return [1, 2, 3, "...", totalPages - 1, totalPages];
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
   }
 
-  if (currentPage >= totalPages - 2) {
-    return [1, 2, "...", totalPages - 2, totalPages - 1, totalPages];
-  }
-
-  return [
-    1,
-    "...",
-    currentPage - 1,
-    currentPage,
-    currentPage + 1,
-    "...",
-    totalPages,
-  ];
+  return pages;
 };

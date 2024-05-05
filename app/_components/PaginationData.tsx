@@ -43,19 +43,22 @@ const PaginationData = (
         >
           <ArrowLeft />
         </Button>
-        {allPages.map((page) => (
-          <Button
-            key={page}
-            variant="ghost"
-            size="icon"
-            onClick={() => createPageUrl(page)}
-            className={cn(
-              page === currentPage && "opacity-50 cursor-not-allowed"
-            )}
-          >
-            {page}
-          </Button>
-        ))}
+        {allPages.map((page, index) => {
+          return (
+            <Button
+              key={index}
+              variant="ghost"
+              size="icon"
+              onClick={() => createPageUrl(page)}
+              className={cn("", {
+                "opacity-50 cursor-not-allowed": page === currentPage
+              })}
+            >
+              {page}
+            </Button>
+          );
+        })}
+
         <Button
           variant="ghost"
           size="icon"

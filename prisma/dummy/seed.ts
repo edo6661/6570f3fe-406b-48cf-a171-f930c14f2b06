@@ -9,28 +9,28 @@ async function main() {
       lastName: "Doe",
       position: "SALES",
       phone: "1234567890",
-      email: "john.doe@example.co.id",
+      email: "john.doe@example.tech",
     },
     {
       firstName: "Jane",
       lastName: "Smith",
       position: "MARKETING",
       phone: "0987654321",
-      email: "jane.smith@example.co.id",
+      email: "jane.smith@example.tech",
     },
     {
       firstName: "Michael",
       lastName: "Johnson",
       position: "IT",
       phone: "5551234567",
-      email: "michael.johnson@example.co.id",
+      email: "michael.johnson@example.tech",
     },
     {
       firstName: "Emily",
       lastName: "Brown",
       position: "HR",
       phone: "9876543210",
-      email: "emily.brown@example.co.id",
+      email: "emily.brown@example.tech",
     },
     // ! generate random data
     {
@@ -38,21 +38,21 @@ async function main() {
       lastName: "Williams",
       position: "SALES",
       phone: "1234567890",
-      email: "james@gmail.co.id",
+      email: "james@gmail.tech",
     },
     {
       firstName: "Mary",
       lastName: "Jones",
       position: "MARKETING",
       phone: "0987654321",
-      email: "jones@gmail.co.id",
+      email: "jones@gmail.tech",
     },
     {
       firstName: "David",
       lastName: "Davis",
       position: "IT",
       phone: "5551234567",
-      email: "davis@gmail.co.id",
+      email: "davis@gmail.tech",
     },
   ];
 
