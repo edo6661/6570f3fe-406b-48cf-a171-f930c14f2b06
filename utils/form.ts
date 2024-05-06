@@ -1,6 +1,9 @@
 import { defaultActions } from "@/constants/defaultActions";
 
-export const getForm = (actions: typeof defaultActions) => {
+export const getForm = (
+  actions: typeof defaultActions,
+  allChecked: boolean
+) => {
   const { add, edit, save, undo, delete: _del } = actions;
   return {
     getTitle: () => {
@@ -22,7 +25,9 @@ export const getForm = (actions: typeof defaultActions) => {
         case edit:
           return "Edit the item";
         case _del:
-          return "Are you sure you want to delete this item?";
+          return allChecked
+            ? "Are you sure you want to delete all items?"
+            : "Are you sure you want to delete this item?";
         default:
           return null;
       }

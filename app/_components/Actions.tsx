@@ -1,5 +1,6 @@
 "use client"
 
+import { Hint } from "@/components/shared/Hint";
 import { Button } from "@/components/ui/button";
 import { EnumActions } from "@/constants/defaultActions";
 import { useModalContext } from "@/hooks/useModalContext";
@@ -18,42 +19,57 @@ const Actions = (
 
   return (
     <div className="flex items-center gap-4">
-      <Button variant="ghost" size="icon"
-        onClick={() => onAction('add')}
+      <Hint
+        label="Add new Data"
+        align="center"
+        alignOffset={10}
+        sideOffset={10}
+        side="top"
       >
-        <Plus />
-      </Button>
+        <Button variant="ghost" size="icon"
+          onClick={() => onAction('add')}
+        >
+          <Plus />
+        </Button>
+      </Hint>
 
-      <Button variant="ghost" size="icon"
-        onClick={async () => {
-          if (oneTrueKey.length > 1 || oneTrueKey.length === 0) {
-            return toast.success('Please select only one item to edit')
-          }
-          onAction('edit')
-        }}
+      <Hint
+        label="Edit Data"
+        align="center"
+        alignOffset={10}
+        sideOffset={10}
+        side="top"
       >
-        <Edit />
-      </Button>
-      {/* <Button variant="ghost" size="icon"
-        onClick={() => onAction('save')}
+        <Button variant="ghost" size="icon"
+          onClick={async () => {
+            if (oneTrueKey.length > 1 || oneTrueKey.length === 0) {
+              return toast.success('Please select only one item to edit')
+            }
+            onAction('edit')
+          }}
+        >
+          <Edit />
+        </Button>
+      </Hint>
+
+      <Hint
+        label="Delete Data"
+        align="center"
+        alignOffset={10}
+        sideOffset={10}
+        side="top"
       >
-        <Save />
-      </Button>
-      <Button variant="ghost" size="icon"
-        onClick={() => onAction('undo')}
-      >
-        <Undo />
-      </Button> */}
-      <Button variant="ghost" size="icon"
-        onClick={() => {
-          if (oneTrueKey.length === 0) {
-            return toast.success('Please select at least one item to delete')
-          }
-          onAction('delete')
-        }}
-      >
-        <Trash />
-      </Button>
+        <Button variant="ghost" size="icon"
+          onClick={() => {
+            if (oneTrueKey.length === 0) {
+              return toast.success('Please select at least one item to delete')
+            }
+            onAction('delete')
+          }}
+        >
+          <Trash />
+        </Button>
+      </Hint>
     </div>
   )
 }

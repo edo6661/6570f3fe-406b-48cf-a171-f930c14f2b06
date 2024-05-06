@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Hint } from '@/components/shared/Hint';
 interface PaginationDataProps {
   totalPages: number;
 }
@@ -36,40 +37,65 @@ const PaginationData = (
       <motion.div layout className='flex items-center justify-center'>
         {totalPages > 1 && (
           <>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => createPageUrl(prevPage)}
-              disabled={!hasPrev}
-              className='disabled:cursor-not-allowed disabled:opacity-50'
+            <Hint
+              label='Previous Page'
+              align='center'
+              side='left'
+              sideOffset={10}
+              alignOffset={10}
             >
-              <ArrowLeft />
-            </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => createPageUrl(prevPage)}
+                disabled={!hasPrev}
+                className='disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                <ArrowLeft />
+              </Button>
+            </Hint>
             {allPages.map((page, index) => {
               return (
-                <Button
+                <Hint
                   key={index}
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => createPageUrl(page)}
-                  className={cn("", {
-                    "opacity-50 cursor-not-allowed": page === currentPage
-                  })}
+                  label={`Page ${page}`}
+                  align='center'
+                  side='bottom'
+                  sideOffset={10}
+                  alignOffset={10}
                 >
-                  {page}
-                </Button>
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => createPageUrl(page)}
+                    className={cn("", {
+                      "opacity-50 cursor-not-allowed": page === currentPage
+                    })}
+                  >
+                    {page}
+                  </Button>
+                </Hint>
               );
             })}
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => createPageUrl(nextPage)}
-              disabled={!hasNext}
-              className='disabled:cursor-not-allowed disabled:opacity-50'
+            <Hint
+              label='Next Page'
+              align='center'
+              side='right'
+              sideOffset={10}
+              alignOffset={10}
             >
-              <ArrowRight />
-            </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => createPageUrl(nextPage)}
+                disabled={!hasNext}
+                className='disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                <ArrowRight />
+              </Button>
+            </Hint>
           </>
         )}
       </motion.div>

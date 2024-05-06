@@ -11,6 +11,7 @@ const DeleteAction = () => {
   const [isPending, startTransition] = useTransition()
   const ids = useMemo(() => Object.keys(selectedIds).filter((id) => selectedIds[id]), [selectedIds])
   const id = useMemo(() => Object.entries(selectedIds).filter(([key, value]) => value === true).map(([key, value]) => key).toString(), [selectedIds])
+
   const onDelete = () => {
     startTransition(async () => {
       try {

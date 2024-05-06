@@ -1,4 +1,5 @@
 "use client"
+import { Hint } from "@/components/shared/Hint"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
@@ -15,14 +16,24 @@ const SearchBox = () => {
   }
 
   return (
-    <div className="relative">
-      <Input placeholder="Search..."
-        className="placeholder:pl-4 placeholder:font-medium"
-        defaultValue={searchParams.get('q') ?? ''}
-        onChange={(e) => handleSearch(e.target.value)}
-      />
-      <Search className=" absolute right-4 top-1/2 -translate-y-1/2" size={18} />
-    </div>
+    <Hint
+      label="Search Data"
+      align="center"
+      alignOffset={10}
+      side="top"
+      sideOffset={10}
+
+    >
+      <div className="relative">
+        <Input placeholder="Search..."
+          className="placeholder:pl-4 placeholder:font-medium"
+          defaultValue={searchParams.get('q') ?? ''}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+        <Search className=" absolute right-4 top-1/2 -translate-y-1/2" size={18} />
+      </div>
+
+    </Hint>
   )
 }
 
