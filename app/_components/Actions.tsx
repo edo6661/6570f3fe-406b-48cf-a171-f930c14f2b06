@@ -45,7 +45,12 @@ const Actions = (
         <Undo />
       </Button> */}
       <Button variant="ghost" size="icon"
-        onClick={() => onAction('delete')}
+        onClick={() => {
+          if (oneTrueKey.length === 0) {
+            return toast.success('Please select at least one item to delete')
+          }
+          onAction('delete')
+        }}
       >
         <Trash />
       </Button>

@@ -22,9 +22,9 @@ const TableHeadData = (
       onClick={() => onSort(field.value as keyof data)}
     >
       <motion.div layout className="flex gap-2 items-center">
-        <span>
+        <motion.span layout>
           {field.label}
-        </span>
+        </motion.span>
         <AnimatePresence>
           {(currentSort === field.value && !q) && (
             <motion.span
@@ -37,6 +37,7 @@ const TableHeadData = (
               transition={{
                 type: "spring"
               }}
+              layout
             >
               <ArrowUp
                 size={16}

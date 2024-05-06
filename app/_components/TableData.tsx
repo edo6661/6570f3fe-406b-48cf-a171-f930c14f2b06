@@ -100,51 +100,54 @@ const TableData = (
 
   return (
 
-    <motion.div layout className="space-y-8">
-      <Table>
-
-        <TableHeader>
-          <TableRow>
-            <TableHead>
-              <Checkbox
-                checked={
-                  Object.values(selectedIds).length > 0 ? allChecked : false
-                }
-                onCheckedChange={() => {
-                  onCheckedAll()
-                }}
-              />
-            </TableHead>
-            {defaultFields.map((field) =>
-              <TableHeadData
-                q={q}
-                field={field}
-                currentSort={currentSort}
-                sortDirection={sortDirection}
-                onSort={onSort}
-                key={field.value}
-              />
-            )}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-
-          {
-            currentData
-              ?.map((dt) => (
-                <TableRowData
-                  key={dt.id}
-                  {...dt}
-                  selectedIds={selectedIds}
-                  onChecked={onChecked}
+    <motion.div layout className="space-y-8 relative min-h-[40vh]">
+      <motion.div layout className="absolute top-0 w-full">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Checkbox
+                  checked={
+                    Object.values(selectedIds).length > 0 ? allChecked : false
+                  }
+                  onCheckedChange={() => {
+                    onCheckedAll()
+                  }}
                 />
-              ))}
-        </TableBody>
+              </TableHead>
+              {defaultFields.map((field) =>
+                <TableHeadData
+                  q={q}
+                  field={field}
+                  currentSort={currentSort}
+                  sortDirection={sortDirection}
+                  onSort={onSort}
+                  key={field.value}
+                />
+              )}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
 
-      </Table>
-      <PaginationData
-        totalPages={totalPages}
-      />
+            {
+              currentData
+                ?.map((dt) => (
+                  <TableRowData
+                    key={dt.id}
+                    {...dt}
+                    selectedIds={selectedIds}
+                    onChecked={onChecked}
+                  />
+                ))}
+          </TableBody>
+
+        </Table>
+      </motion.div>
+      <motion.div layout className="absolute bottom-0 w-full">
+        <PaginationData
+          totalPages={totalPages}
+        />
+      </motion.div>
     </motion.div>
   )
 }

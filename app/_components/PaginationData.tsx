@@ -34,40 +34,44 @@ const PaginationData = (
   return (
     <>
       <motion.div layout className='flex items-center justify-center'>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => createPageUrl(prevPage)}
-          disabled={!hasPrev}
-          className='disabled:cursor-not-allowed disabled:opacity-50'
-        >
-          <ArrowLeft />
-        </Button>
-        {allPages.map((page, index) => {
-          return (
+        {totalPages > 1 && (
+          <>
             <Button
-              key={index}
               variant="ghost"
               size="icon"
-              onClick={() => createPageUrl(page)}
-              className={cn("", {
-                "opacity-50 cursor-not-allowed": page === currentPage
-              })}
+              onClick={() => createPageUrl(prevPage)}
+              disabled={!hasPrev}
+              className='disabled:cursor-not-allowed disabled:opacity-50'
             >
-              {page}
+              <ArrowLeft />
             </Button>
-          );
-        })}
+            {allPages.map((page, index) => {
+              return (
+                <Button
+                  key={index}
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => createPageUrl(page)}
+                  className={cn("", {
+                    "opacity-50 cursor-not-allowed": page === currentPage
+                  })}
+                >
+                  {page}
+                </Button>
+              );
+            })}
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => createPageUrl(nextPage)}
-          disabled={!hasNext}
-          className='disabled:cursor-not-allowed disabled:opacity-50'
-        >
-          <ArrowRight />
-        </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => createPageUrl(nextPage)}
+              disabled={!hasNext}
+              className='disabled:cursor-not-allowed disabled:opacity-50'
+            >
+              <ArrowRight />
+            </Button>
+          </>
+        )}
       </motion.div>
     </>
   )
